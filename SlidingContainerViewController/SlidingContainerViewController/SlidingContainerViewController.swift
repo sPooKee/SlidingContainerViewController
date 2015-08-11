@@ -19,6 +19,7 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
     var contentViewControllers: [UIViewController]!
     var contentScrollView: UIScrollView!
     var titles: [String]!
+    var imageNames: [String]!
     
     var sliderView: SlidingContainerSliderView!
     var sliderViewShown: Bool = true
@@ -28,10 +29,11 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
     
     // MARK: Init
     
-    init (parent: UIViewController, contentViewControllers: [UIViewController], titles: [String]) {
+    init (parent: UIViewController, contentViewControllers: [UIViewController], titles: [String], imageNames: [String] = []) {
         super.init(nibName: nil, bundle: nil)
         self.contentViewControllers = contentViewControllers
         self.titles = titles
+        self.imageNames = imageNames
         
         
         // Move to parent
@@ -43,7 +45,7 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
         
         // Setup Views
         
-        sliderView = SlidingContainerSliderView (width: view.frame.size.width, titles: titles)
+        sliderView = SlidingContainerSliderView (width: view.frame.size.width, titles: titles, imageNames: imageNames)
         sliderView.frame.origin.y = parent.topLayoutGuide.length
         sliderView.sliderDelegate = self
         

@@ -43,8 +43,11 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
     
     let sliderHeight: CGFloat = 44
     var titles: [String]!
+    var imageNames: [String]!
     
     var labels: [UILabel] = []
+    var images: [UIImageView] = []
+    
     var selector: UIView!
 
     var sliderDelegate: SlidingContainerSliderViewDelegate?
@@ -52,9 +55,10 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
     
     // MARK: Init
     
-    init (width: CGFloat, titles: [String]) {
+    init (width: CGFloat, titles: [String], imageNames: [String] = []) {
         super.init(frame: CGRect (x: 0, y: 0, width: width, height: sliderHeight))
         self.titles = titles
+        self.imageNames = imageNames
         
         delegate = self
         showsHorizontalScrollIndicator = false
@@ -117,6 +121,30 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
             labels.append(label)
             currentX += label.frame.size.width + appearance.outerPadding
         }
+        
+        var imageTag = 0
+        currentX = appearance.outerPadding
+        
+        println(titles)
+        println(imageNames)
+        
+        for imageName in imageNames {
+            println(imageName)
+            let image = UIImageView (frame: CGRect (x: 0, y: 0, width: 0, height: 0))
+            image.image = UIImage(named: imageName)
+            image.frame.origin.x = currentX
+            image.center.y = frame.size.height/2
+            image.tag = imageTag++
+            image.sizeToFit()
+            image.frame.size.width += appearance.innerPadding * 2
+            image.addGestureRecognizer(UITapGestureRecognizer (target: self, action: "didTap:"))
+            image.userInteractionEnabled = true
+            
+            addSubview(image)
+            images.append(image)
+            currentX += image.frame.size.width + appearance.outerPadding
+        }
+        
         
         let selectorH = appearance.selectorHeight
         selector = UIView (frame: CGRect (x: 0, y: frame.size.height - selectorH, width: 100, height: selectorH))
