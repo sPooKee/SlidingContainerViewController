@@ -143,13 +143,22 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
         UIView.animateWithDuration(0.3,
             animations: {
                 [unowned self] in
-                self.sliderView.frame.origin.y += self.parentViewController!.topLayoutGuide.length + self.sliderView.frame.size.height
+                self.sliderView.frame.origin.y -= self.parentViewController!.topLayoutGuide.length + self.sliderView.frame.size.height
             },
             completion: {
                 [unowned self] finished in
                 self.sliderViewShown = false
                 self.delegate?.slidingContainerViewControllerDidHideSliderView? (self)
+
             })
+    }
+    
+    func toggleSlider(){
+        if sliderViewShown {
+            hideSlider()
+        }else{
+            showSlider()
+        }
     }
     
     func showSlider () {
@@ -161,7 +170,7 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
         UIView.animateWithDuration(0.3,
             animations: {
                 [unowned self] in
-                self.sliderView.frame.origin.y -= self.parentViewController!.topLayoutGuide.length + self.sliderView.frame.size.height
+                self.sliderView.frame.origin.y += self.parentViewController!.topLayoutGuide.length + self.sliderView.frame.size.height
             },
             completion: {
                 [unowned self] finished in

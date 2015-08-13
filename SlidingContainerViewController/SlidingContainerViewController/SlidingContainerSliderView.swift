@@ -21,8 +21,12 @@ struct SlidingContainerSliderViewAppearance {
     var outerPadding: CGFloat
     var innerPadding: CGFloat
     
+    var showLabels: Bool
+    
     var selectorColor: UIColor
     var selectorHeight: CGFloat
+    
+    var sliderHeight: CGFloat
 }
 
 protocol SlidingContainerSliderViewDelegate {
@@ -41,7 +45,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
     
     var shouldSlide: Bool = true
     
-    let sliderHeight: CGFloat = 44
+    var sliderHeight: CGFloat = 44
     var titles: [String]!
     var imageNames: [String]!
     
@@ -56,17 +60,9 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
     // MARK: Init
     
     init (width: CGFloat, titles: [String], imageNames: [String] = []) {
-        super.init(frame: CGRect (x: 0, y: 0, width: width, height: sliderHeight))
-        self.titles = titles
-        self.imageNames = imageNames
-        
-        delegate = self
-        showsHorizontalScrollIndicator = false
-        showsVerticalScrollIndicator = false
-        scrollsToTop = false
         
         appearance = SlidingContainerSliderViewAppearance (
-            backgroundColor: UIColor(white: 0, alpha: 0.3),
+            backgroundColor: UIColor(red:0.93, green:0.93, blue:0.93, alpha:1),
             
             font: UIFont (name: "HelveticaNeue-Light", size: 15)!,
             selectedFont: UIFont.systemFontOfSize(15),
@@ -77,8 +73,24 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
             outerPadding: 10,
             innerPadding: 10,
             
+            showLabels: true,
+            
             selectorColor: UIColor.redColor(),
-            selectorHeight: 5)
+            selectorHeight: 5,
+            
+            sliderHeight: 90
+        )
+        
+        sliderHeight = appearance.sliderHeight
+        
+        super.init(frame: CGRect (x: 0, y: 0, width: width, height: sliderHeight))
+        self.titles = titles
+        self.imageNames = imageNames
+        
+        delegate = self
+        showsHorizontalScrollIndicator = false
+        showsVerticalScrollIndicator = false
+        scrollsToTop = false
         
         draw()
     }
@@ -105,7 +117,20 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
             }
         }
         
+        if images.count > 0 {
+            for image in images {
+                
+                image.removeFromSuperview()
+                
+                if selector != nil {
+                    selector.removeFromSuperview()
+                    selector = nil
+                }
+            }
+        }
+        
         labels = []
+        images = []
         backgroundColor = appearance.backgroundColor
         
         var labelTag = 0
@@ -114,41 +139,35 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
         for title in titles {
             let label = labelWithTitle(title)
             label.frame.origin.x = currentX
-            label.center.y = frame.size.height/2
-            label.tag = labelTag++
+            label.center.y = frame.size.height * 7/8
             
-            addSubview(label)
-            labels.append(label)
-            currentX += label.frame.size.width + appearance.outerPadding
-        }
-        
-        var imageTag = 0
-        currentX = appearance.outerPadding
-        
-        println(titles)
-        println(imageNames)
-        
-        for imageName in imageNames {
-            println(imageName)
-            let image = UIImageView (frame: CGRect (x: 0, y: 0, width: 0, height: 0))
-            image.image = UIImage(named: imageName)
+            let image = UIImageView (frame: CGRect (x: 0, y: 0, width: label.frame.size.width, height: sliderHeight * 5/8))
+            image.image = UIImage(named: imageNames[labelTag])
             image.frame.origin.x = currentX
-            image.center.y = frame.size.height/2
-            image.tag = imageTag++
-            image.sizeToFit()
-            image.frame.size.width += appearance.innerPadding * 2
+            image.center.y = frame.size.height * 7/16
+            image.contentMode = UIViewContentMode.ScaleAspectFit
+            
+            image.image = image.image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            image.tintColor = appearance.textColor
             image.addGestureRecognizer(UITapGestureRecognizer (target: self, action: "didTap:"))
             image.userInteractionEnabled = true
             
+            label.tag = labelTag++
+            image.tag = label.tag
+            
+            addSubview(label)
+            labels.append(label)
             addSubview(image)
             images.append(image)
-            currentX += image.frame.size.width + appearance.outerPadding
+            
+            currentX += label.frame.size.width + appearance.outerPadding
         }
-        
+       
         
         let selectorH = appearance.selectorHeight
         selector = UIView (frame: CGRect (x: 0, y: frame.size.height - selectorH, width: 100, height: selectorH))
         selector.backgroundColor = appearance.selectorColor
+        selector.hidden = true
         addSubview(selector)
         
         contentSize = CGSize (width: currentX, height: frame.size.height)
@@ -163,10 +182,13 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
         label.textAlignment = .Center
 
         label.sizeToFit()
+        label.frame.size.height = frame.size.height * 1/4
         label.frame.size.width += appearance.innerPadding * 2
         
         label.addGestureRecognizer(UITapGestureRecognizer (target: self, action: "didTap:"))
         label.userInteractionEnabled = true
+        
+        label.hidden = !appearance.showLabels
         
         return label
     }
@@ -187,9 +209,11 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
         
         for i in 0..<self.labels.count {
             let label = labels[i]
+            let image = images[i]
             
             if i == index {
                 
+                image.tintColor = appearance.selectorColor
                 label.textColor = appearance.selectorColor
                 label.font = appearance.selectedFont
                 
@@ -208,7 +232,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
                 })
                 
             } else {
-                
+                image.tintColor = appearance.textColor
                 label.textColor = appearance.textColor
                 label.font = appearance.font
                 
