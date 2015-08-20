@@ -165,7 +165,8 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
        
         
         let selectorH = appearance.selectorHeight
-        selector = UIView (frame: CGRect (x: 0, y: frame.size.height - selectorH, width: 100, height: selectorH))
+        let screenRect = UIScreen.mainScreen().bounds
+        selector = UIView (frame: CGRect (x: 0, y: frame.size.height - selectorH, width: screenRect.size.width, height: selectorH))
         selector.backgroundColor = appearance.selectorColor
         selector.hidden = true
         addSubview(selector)

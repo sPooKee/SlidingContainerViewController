@@ -24,6 +24,8 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
     var sliderView: SlidingContainerSliderView!
     var sliderViewShown: Bool = true
     
+    var sliderViewAnimate: Bool = false
+    
     var delegate: SlidingContainerViewControllerDelegate?
     
     
@@ -56,6 +58,8 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
         contentScrollView.scrollsToTop = false
         contentScrollView.delegate = self
         contentScrollView.contentSize.width = contentScrollView.frame.size.width * CGFloat(contentViewControllers.count)
+
+        contentScrollView.frame.origin.y = sliderView.frame.size.height
         
         view.addSubview(contentScrollView)
         view.addSubview(sliderView)
@@ -140,20 +144,29 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
             return
         }
         
+        sliderViewAnimate = true
+        
         UIView.animateWithDuration(0.3,
             animations: {
                 [unowned self] in
                 self.sliderView.frame.origin.y -= self.parentViewController!.topLayoutGuide.length + self.sliderView.frame.size.height
+                
+                self.contentScrollView.frame.origin.y = 0
             },
             completion: {
                 [unowned self] finished in
                 self.sliderViewShown = false
                 self.delegate?.slidingContainerViewControllerDidHideSliderView? (self)
-
+                self.sliderViewAnimate = false
             })
     }
     
     func toggleSlider(){
+        
+        if sliderViewAnimate {
+            return
+        }
+        
         if sliderViewShown {
             hideSlider()
         }else{
@@ -167,15 +180,19 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
             return
         }
         
+        sliderViewAnimate = true
+        
         UIView.animateWithDuration(0.3,
             animations: {
                 [unowned self] in
                 self.sliderView.frame.origin.y += self.parentViewController!.topLayoutGuide.length + self.sliderView.frame.size.height
+                self.contentScrollView.frame.origin.y = self.sliderView.frame.size.height
             },
             completion: {
                 [unowned self] finished in
                 self.sliderViewShown = true
                 self.delegate?.slidingContainerViewControllerDidShowSliderView? (self)
+                self.sliderViewAnimate = false
             })
     }
     

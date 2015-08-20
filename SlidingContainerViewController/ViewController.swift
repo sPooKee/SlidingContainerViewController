@@ -8,32 +8,32 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIScrollViewDelegate {
+class ViewControllerx: UIViewController, UIScrollViewDelegate {
 
-    var smallSlider: UIScrollView!
-    var bigSlider: UIScrollView!
+    //var smallSlider: UIScrollView!
+    
+    @IBOutlet weak var smallSlider: UIScrollView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        smallSlider = UIScrollView (frame: CGRect (x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height/2))
-        bigSlider = UIScrollView (frame: CGRect (x: 0, y: smallSlider.frame.size.height, width: view.frame.size.width, height: view.frame.size.height/2))
+        //smallSlider = UIScrollView (frame: CGRect (x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height))
+
         
         smallSlider.backgroundColor = UIColor.redColor()
-        bigSlider.backgroundColor = UIColor.yellowColor()
+
         
-        smallSlider.contentSize = CGSize (width: 1000, height: smallSlider.frame.size.height)
-        bigSlider.contentSize = CGSize (width: 500, height: bigSlider.frame.size.height)
+        smallSlider.contentSize = CGSize (width: smallSlider.frame.size.width, height: 1000)
         
-        smallSlider.delegate = self
-        bigSlider.delegate = self
+        //smallSlider.delegate = self
+
         
-        view.addSubview(smallSlider)
-        view.addSubview(bigSlider)
+        //view.addSubview(smallSlider)
+
         
         let gradient = CAGradientLayer()
-        gradient.frame = CGRect (x: 0, y: 0, width: smallSlider.contentSize.width, height: smallSlider.frame.height)
-        gradient.colors = [UIColor.whiteColor().CGColor, UIColor.blackColor().CGColor]
+        gradient.frame = CGRect (x: 0, y: 0, width: smallSlider.contentSize.width, height: smallSlider.contentSize.height)
+        gradient.colors = [UIColor.whiteColor().CGColor, UIColor.blueColor().CGColor]
         gradient.locations = [0, 1]
         gradient.startPoint = CGPoint(x: 0.0, y: 1.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
@@ -44,16 +44,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         
-        if scrollView == bigSlider {
-            
-            let bigContent = bigSlider.contentSize.width - bigSlider.frame.size.width
-            let smallContent = smallSlider.contentSize.width - smallSlider.frame.size.width
-            
-            let current = bigSlider.contentOffset.x
-            let ratio = current / bigContent
-            
-            smallSlider.contentOffset = CGPoint (x: smallContent * ratio, y: 0)
-        }
         
     }
 

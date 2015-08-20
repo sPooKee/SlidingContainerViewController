@@ -40,7 +40,7 @@ class DemoViewController: UIViewController, SlidingContainerViewControllerDelega
     
     func viewControllerWithColorAndTitle (color: UIColor, title: String) -> UIViewController {
         
-        let vc = UIViewController ()
+        let vc = self.storyboard!.instantiateViewControllerWithIdentifier("TestVC") as! ViewController
         vc.view.backgroundColor = color
         
         let label = UILabel (frame: vc.view.frame)
@@ -52,7 +52,7 @@ class DemoViewController: UIViewController, SlidingContainerViewControllerDelega
         label.sizeToFit()
         label.center = view.center
         
-        vc.view.addSubview(label)
+        vc.smallSlider.addSubview(label)
         
         return vc
     }
