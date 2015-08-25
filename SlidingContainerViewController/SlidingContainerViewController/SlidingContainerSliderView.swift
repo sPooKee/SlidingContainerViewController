@@ -64,7 +64,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
         appearance = SlidingContainerSliderViewAppearance (
             backgroundColor: UIColor(red:0.93, green:0.93, blue:0.93, alpha:1),
             
-            font: UIFont (name: "HelveticaNeue-Light", size: 15)!,
+            font: UIFont (name: "Lato", size: 15)!,
             selectedFont: UIFont.systemFontOfSize(15),
             
             textColor: UIColor.darkGrayColor(),
