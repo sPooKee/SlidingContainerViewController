@@ -64,8 +64,8 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
         appearance = SlidingContainerSliderViewAppearance (
             backgroundColor: UIColor(red:0.93, green:0.93, blue:0.93, alpha:1),
             
-            font: UIFont (name: "Lato", size: 15)!,
-            selectedFont: UIFont.systemFontOfSize(15),
+            font: UIFont (name: "Lato", size: 14)!,
+            selectedFont: UIFont.systemFontOfSize(14),
             
             textColor: UIColor.darkGrayColor(),
             selectedTextColor: UIColor.whiteColor(),
@@ -78,7 +78,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
             selectorColor: UIColor.redColor(),
             selectorHeight: 5,
             
-            sliderHeight: 90
+            sliderHeight: 70
         )
         
         sliderHeight = appearance.sliderHeight

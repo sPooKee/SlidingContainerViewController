@@ -28,10 +28,13 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
     
     var delegate: SlidingContainerViewControllerDelegate?
     
+    var parent : UIViewController
+    
     
     // MARK: Init
     
     init (parent: UIViewController, contentViewControllers: [UIViewController], titles: [String], imageNames: [String] = []) {
+        self.parent = parent
         super.init(nibName: nil, bundle: nil)
         self.contentViewControllers = contentViewControllers
         self.titles = titles
@@ -59,7 +62,8 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
         contentScrollView.delegate = self
         contentScrollView.contentSize.width = contentScrollView.frame.size.width * CGFloat(contentViewControllers.count)
 
-        contentScrollView.frame.origin.y = sliderView.frame.size.height
+        contentScrollView.frame.origin.y = sliderView.frame.size.height + parent.topLayoutGuide.length
+        contentScrollView.frame.size.height = view.frame.size.height - (sliderView.frame.size.height + parent.topLayoutGuide.length)
         
         view.addSubview(contentScrollView)
         view.addSubview(sliderView)
@@ -71,21 +75,20 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
         for vc in contentViewControllers {
             vc.view.frame = CGRect (
                 x: currentX,
-                y: parent.topLayoutGuide.length,
+                y: 0,
                 width: view.frame.size.width,
-                height: view.frame.size.height - parent.topLayoutGuide.length - parent.bottomLayoutGuide.length)
+                height: contentScrollView.frame.size.height) //view.frame.size.height - parent.topLayoutGuide.length - parent.bottomLayoutGuide.length)
             contentScrollView.addSubview(vc.view)
             
             currentX += contentScrollView.frame.size.width
+            
         }
-        
-        
-        // Move First Item
         
         setCurrentViewControllerAtIndex(0)
     }
     
     required init(coder aDecoder: NSCoder) {
+        self.parent = UIViewController()
         super.init(coder: aDecoder)
     }
     
@@ -146,12 +149,13 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
         
         sliderViewAnimate = true
         
+        
         UIView.animateWithDuration(0.3,
             animations: {
                 [unowned self] in
                 self.sliderView.frame.origin.y -= self.parentViewController!.topLayoutGuide.length + self.sliderView.frame.size.height
-                
-                self.contentScrollView.frame.origin.y = 0
+                self.contentScrollView.frame.origin.y = self.parent.topLayoutGuide.length
+                self.contentScrollView.frame.size.height = self.view.frame.size.height - (self.parent.topLayoutGuide.length)
             },
             completion: {
                 [unowned self] finished in
@@ -186,7 +190,8 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
             animations: {
                 [unowned self] in
                 self.sliderView.frame.origin.y += self.parentViewController!.topLayoutGuide.length + self.sliderView.frame.size.height
-                self.contentScrollView.frame.origin.y = self.sliderView.frame.size.height
+                self.contentScrollView.frame.origin.y = self.sliderView.frame.size.height + self.parent.topLayoutGuide.length
+                self.contentScrollView.frame.size.height = self.view.frame.size.height - (self.sliderView.frame.size.height + self.parent.topLayoutGuide.length)
             },
             completion: {
                 [unowned self] finished in
