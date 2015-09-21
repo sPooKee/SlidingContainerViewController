@@ -89,7 +89,7 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
     
     required init(coder aDecoder: NSCoder) {
         self.parent = UIViewController()
-        super.init(coder: aDecoder)
+        super.init(coder: aDecoder)!
     }
     
     
@@ -227,7 +227,7 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
     }
 }
 
-extension UIGestureRecognizerState: Printable {
+extension UIGestureRecognizerState: CustomStringConvertible {
     public var description: String {
         get {
             switch self {
