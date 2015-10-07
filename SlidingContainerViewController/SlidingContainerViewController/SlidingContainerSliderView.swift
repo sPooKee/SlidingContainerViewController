@@ -34,7 +34,7 @@ protocol SlidingContainerSliderViewDelegate {
 }
 
 class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
-   
+    
     // MARK: Properties
     
     var appearance: SlidingContainerSliderViewAppearance! {
@@ -53,7 +53,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
     var images: [UIImageView] = []
     
     var selector: UIView!
-
+    
     var sliderDelegate: SlidingContainerSliderViewDelegate?
     
     
@@ -75,7 +75,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
             
             showLabels: true,
             
-            selectorColor: UIColor.redColor(),
+            selectorColor: JSTViewController.getTintColor(),
             selectorHeight: 5,
             
             sliderHeight: 70
@@ -98,7 +98,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
     }
-
+    
     
     // MARK: Draw
     
@@ -162,7 +162,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
             
             currentX += label.frame.size.width + appearance.outerPadding
         }
-       
+        
         
         let selectorH = appearance.selectorHeight
         let screenRect = UIScreen.mainScreen().bounds
@@ -181,7 +181,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
         label.font = appearance.font
         label.textColor = appearance.textColor
         label.textAlignment = .Center
-
+        
         label.sizeToFit()
         label.frame.size.height = frame.size.height * 1/4
         label.frame.size.width += appearance.innerPadding * 2
@@ -221,6 +221,18 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
                 label.sizeToFit()
                 label.frame.size.width += appearance.innerPadding * 2
 
+                var scrollTo : CGFloat;
+                
+                if label.frame.origin.x < self.frame.width / 2 {
+                    scrollTo = 0
+                } else if self.contentSize.width - label.frame.origin.x < self.frame.width - (label.frame.width / 2) {
+                    scrollTo = self.contentSize.width - self.frame.width
+                } else {
+                    scrollTo = label.frame.origin.x - (self.frame.width / 2) + (label.frame.width / 2)
+                }
+                
+                self.setContentOffset(CGPoint(x: scrollTo, y: 0), animated: true)
+                
                 // Set selector
                 
                 UIView.animateWithDuration(0.3, animations: {
@@ -230,7 +242,7 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
                         y: self.selector.frame.origin.y,
                         width: label.frame.size.width,
                         height: self.appearance.selectorHeight)
-                })
+                    })
                 
             } else {
                 image.tintColor = appearance.textColor
@@ -242,6 +254,6 @@ class SlidingContainerSliderView: UIScrollView, UIScrollViewDelegate {
             }
         }
     }
-
+    
 }
 

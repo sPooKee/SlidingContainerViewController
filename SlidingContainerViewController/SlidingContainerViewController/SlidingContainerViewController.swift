@@ -210,15 +210,15 @@ class SlidingContainerViewController: UIViewController, UIScrollViewDelegate, Sl
             sliderView.shouldSlide = true
         }
         
-        let contentW = contentScrollView.contentSize.width - contentScrollView.frame.size.width
-        let sliderW = sliderView.contentSize.width - sliderView.frame.size.width
+        //let contentW = contentScrollView.contentSize.width - contentScrollView.frame.size.width
+        //let sliderW = sliderView.contentSize.width - sliderView.frame.size.width
         
-        let current = contentScrollView.contentOffset.x
-        let ratio = current / contentW
+        //let current = contentScrollView.contentOffset.x
+        //let ratio = current / contentW
         
-        if sliderView.contentSize.width > sliderView.frame.size.width && sliderView.shouldSlide == true {
-            sliderView.contentOffset = CGPoint (x: sliderW * ratio, y: 0)
-        }
+        //if sliderView.contentSize.width > sliderView.frame.size.width && sliderView.shouldSlide == true {
+            //sliderView.contentOffset = CGPoint (x: sliderW * ratio, y: 0)
+        //}
     }
 
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
